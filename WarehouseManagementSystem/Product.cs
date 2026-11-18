@@ -67,7 +67,7 @@ namespace WarehouseManagementSystem
 			}
 		}
 
-		public void DisplayInfo()
+		public virtual void DisplayInfo()
 		{
 			Console.WriteLine("Product Information");
 			Console.WriteLine("-------------------");
