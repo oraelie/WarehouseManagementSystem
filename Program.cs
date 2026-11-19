@@ -1,102 +1,136 @@
-﻿namespace WarehouseManagementSystem
+﻿
+using System;
+
+namespace WarehouseManagementSystem
 {
 	internal class Program
 	{
 		static void Main(string[] args)
 		{
-
-
-
 			Warehouse warehouse = new Warehouse();
 
-			// Create an Electronics object
-			Electronics e1 = new Electronics(101, "Laptop", 5, 24);
+			int choice = -1;
 
-			// Create a Furniture object
-			Furniture f1 = new Furniture(201, "Office Desk", 10, "Wood");
-
-			// Create an Electronics object
-			Electronics e3 = new Electronics(102, "Laptop3", 5, 36);
-
-			// Create a Furniture object
-			Furniture f3 = new Furniture(202, "Office Desk3", 10, "Wood3");
-
-
-			// Add both products
-			warehouse.AddProduct(e1);
-			warehouse.AddProduct(f1);
-			warehouse.AddProduct(e3);
-			warehouse.AddProduct(f3);
-
-			// Test duplicate product ID
-			Electronics e2 = new Electronics(101, "Monitor", 8, 12);
-			warehouse.AddProduct(e2);
-
-			Console.ReadKey();
-
-			//warehouse.RemoveProduct(101);
-
-
-			Console.WriteLine("\n--- Testing RemoveProduct ---");
-
-			// Remove an existing product
-			warehouse.RemoveProduct(101);
-
-			// Try removing a product that does not exist
-			warehouse.RemoveProduct(999);
-
-			// Try removing the same product again
-			warehouse.RemoveProduct(101);
-			Console.WriteLine();
-
-
-			Console.WriteLine("\n--- Testing FindProduct ---");
-
-			// Search for an existing product
-
-			Product? foundProduct = warehouse.FindProduct(201);
-
-			if (foundProduct != null)
+			do
 			{
-				Console.WriteLine("Product found:");
-				foundProduct.DisplayInfo();
-			}
-			else
-			{
-				Console.WriteLine("Product not found.");
-			}
+				Console.WriteLine("\n=== Warehouse Management System ===");
+				Console.WriteLine("1. Add Product");
+				Console.WriteLine("2. Remove Product");
+				Console.WriteLine("3. Display Products");
+				Console.WriteLine("4. Exit");
 
-			// Search for a nonexistent product
-			Product? missingProduct = warehouse.FindProduct(999);
+				Console.Write("Enter your choice: ");
 
-			if (missingProduct != null)
-			{
-				missingProduct.DisplayInfo();
-			}
-			else
-			{
-				Console.WriteLine("Product not found.");
-			}
+				if (int.TryParse(Console.ReadLine(), out choice))
+				{
+					switch (choice)
+					{
+						case 1:
+							Console.WriteLine("Choose product type:");
+							Console.WriteLine("1. Electronics");
+							Console.WriteLine("2. Furniture");
+							Console.Write("Enter choice: ");
 
+							if (!int.TryParse(Console.ReadLine(), out int type)
+								|| (type != 1 && type != 2))
+							{
+								Console.WriteLine("Invalid product type.");
+								break;
+							}
 
-			Console.WriteLine("\n--- Testing DisplayProducts ---");
+							Console.Write("Enter ID: ");
+							if (!int.TryParse(Console.ReadLine(), out int id))
+							{
+								Console.WriteLine("Invalid ID.");
+								break;
+							}
 
-			// Display all remaining products
-			warehouse.DisplayProducts();
-
-
-			Console.WriteLine("\n--- Testing GetTotalQuantity ---");
-
-			int totalQuantity = warehouse.GetTotalQuantity();
-
-			Console.WriteLine($"Total Quantity in Warehouse: {totalQuantity}");
-
-			warehouse.GetProductQuantity(202);
-			warehouse.GetProductQuantity(999);
-
+							Console.Write("Enter Name: ");
+							string name = Console.ReadLine() ?? "";
 
 
+							int quantity;
 
+							Console.Write("Enter Quantity: ");
+
+							while (!int.TryParse(Console.ReadLine(), out quantity) || quantity < 0)
+							{
+								Console.WriteLine("Invalid quantity. Please enter a valid number.");
+								Console.Write("Enter Quantity: ");
+							}
+
+
+							if (type == 1)
+							{
+								Console.Write("Enter Warranty (months): ");
+
+								if (!int.TryParse(Console.ReadLine(), out int warranty)
+									|| warranty < 0)
+								{
+									Console.WriteLine("Invalid warranty.");
+									break;
+								}
+
+								Electronics electronics =
+									new Electronics(id, name, quantity, warranty);
+
+								warehouse.AddProduct(electronics);
+							}
+							else
+							{
+								Console.Write("Enter Material: ");
+								string material = Console.ReadLine() ?? "";
+
+								if (string.IsNullOrWhiteSpace(material))
+								{
+									Console.WriteLine("Invalid material.");
+									break;
+								}
+
+								Furniture furniture =
+									new Furniture(id, name, quantity, material);
+
+								warehouse.AddProduct(furniture);
+							}
+
+							break;
+
+						case 2:
+							Console.Write("Enter ID to remove: ");
+
+							if (int.TryParse(Console.ReadLine(), out int removeId))
+							{
+								warehouse.RemoveProduct(removeId);
+							}
+							else
+							{
+								Console.WriteLine("Invalid ID.");
+							}
+
+							break;
+
+						case 3:
+							Console.WriteLine("Displaying Warehouse Products...");
+							warehouse.DisplayProducts();
+							break;
+
+
+						case 4:
+							Console.WriteLine("Exiting program... Goodbye!");
+							break;
+
+						default:
+							Console.WriteLine("Invalid option. Choose 1 to 4.");
+							break;
+					}
+				}
+				else
+				{
+					Console.WriteLine("Invalid input. Please enter a number.");
+					choice = -1;
+				}
+
+			} while (choice != 4);
 		}
 	}
 }
