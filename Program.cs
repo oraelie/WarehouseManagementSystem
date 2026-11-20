@@ -9,6 +9,9 @@ namespace WarehouseManagementSystem
 		{
 			Warehouse warehouse = new Warehouse();
 
+			// Load previously saved products
+			warehouse.LoadProducts();
+
 			int choice;
 
 			do
@@ -65,12 +68,14 @@ namespace WarehouseManagementSystem
 						Console.Write("Enter Name: ");
 						name = Console.ReadLine() ?? "";
 
-						while (string.IsNullOrWhiteSpace(name))
+
+						while (string.IsNullOrWhiteSpace(name) || name.Contains('|'))
 						{
-							Console.WriteLine("Invalid name. Name cannot be empty.");
+							Console.WriteLine("Invalid name. Name cannot be empty or contain '|'.");
 							Console.Write("Enter Name: ");
 							name = Console.ReadLine() ?? "";
 						}
+
 
 						// Product Quantity validation
 						int quantity;
@@ -114,12 +119,14 @@ namespace WarehouseManagementSystem
 							Console.Write("Enter Material: ");
 							material = Console.ReadLine() ?? "";
 
-							while (string.IsNullOrWhiteSpace(material))
+
+							while (string.IsNullOrWhiteSpace(material) || material.Contains('|'))
 							{
-								Console.WriteLine("Invalid material. Material cannot be empty.");
+								Console.WriteLine("Invalid material. Material cannot be empty or contain '|'.");
 								Console.Write("Enter Material: ");
 								material = Console.ReadLine() ?? "";
 							}
+
 
 							Furniture furniture =
 								new Furniture(id, name, quantity, material);
@@ -158,15 +165,28 @@ namespace WarehouseManagementSystem
 						break;
 
 
+
 					case 4:
-						// EXIT
+						// SAVE PRODUCTS AND EXIT
 
-						Console.WriteLine("Exiting Warehouse Management System...");
+						try
+						{
+							warehouse.SaveProducts();
+							Console.WriteLine("Exiting Warehouse Management System...");
+						}
+						catch (IOException ex)
+						{
+							Console.WriteLine($"Error saving products: {ex.Message}");
+							Console.WriteLine("Exiting without saving.");
+						}
+						catch (UnauthorizedAccessException ex)
+						{
+							Console.WriteLine($"Access denied while saving: {ex.Message}");
+							Console.WriteLine("Exiting without saving.");
+						}
+
 						break;
 
-					default:
-						Console.WriteLine("Invalid choice. Please select 1 to 4.");
-						break;
 				}
 
 			} while (choice != 4);

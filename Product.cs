@@ -66,17 +66,20 @@ namespace WarehouseManagementSystem
 		return name;
 		}
 
+
 		public void SetName(string name)
 		{
-			if (!string.IsNullOrWhiteSpace(name))
+			if (string.IsNullOrWhiteSpace(name) || name.Contains('|'))
 			{
-				this.name = name;
+				throw new ArgumentException(
+					"Product name cannot be empty or contain '|'.",
+					nameof(name)
+				);
 			}
-			else
-			{
-				Console.WriteLine("Invalid Product Name. Name cannot be empty.");
-			}
+
+			this.name = name;
 		}
+
 
 		public int GetQuantity()
 		{
