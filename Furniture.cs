@@ -14,32 +14,33 @@ namespace WarehouseManagementSystem
 		}
 
 		public Furniture(int id, string name, int quantity, string material)
-		: base(id,name,quantity)
-		{
-			this.material = material;
-		}
-
-		public Furniture(Furniture f) : base(f)
+						: base(id, name, quantity)
 		{
 			SetMaterial(material);
 		}
 
+		public Furniture(Furniture f) : base(f)
+		{
+			SetMaterial(f.GetMaterial());
+		}
 
 		public string GetMaterial()
 		{
 			return material;
 		}
 
+
 		public void SetMaterial(string material)
 		{
-			if (!string.IsNullOrWhiteSpace(material))
+			if (string.IsNullOrWhiteSpace(material))
 			{
-				this.material = material;
+				throw new ArgumentException(
+					"Material cannot be empty.",
+					nameof(material)
+				);
 			}
-			else
-			{
-				Console.WriteLine("Material cannot be empty.");
-			}
+
+			this.material = material;
 		}
 
 		public override void DisplayInfo()
@@ -47,7 +48,5 @@ namespace WarehouseManagementSystem
 			base.DisplayInfo();
 			Console.WriteLine($"Material: {material}");
 		}
-
-
 	}
 }

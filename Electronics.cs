@@ -20,27 +20,32 @@ namespace WarehouseManagementSystem
 		}
 
 
+
 		public Electronics(Electronics e) : base(e)
 		{
-			this.warrantyPeriod = e.warrantyPeriod;
+			SetWarrantyPeriod(e.GetWarrantyPeriod());
 		}
+
 
 		public int GetWarrantyPeriod()
 		{
 			return warrantyPeriod;
 		}
 
+
 		public void SetWarrantyPeriod(int warrantyPeriod)
 		{
-			if (warrantyPeriod >= 0)
+			if (warrantyPeriod < 0)
 			{
-				this.warrantyPeriod = warrantyPeriod;
+				throw new ArgumentOutOfRangeException(
+					nameof(warrantyPeriod),
+					"Warranty period cannot be negative."
+				);
 			}
-			else
-			{
-				Console.WriteLine("Warranty period cannot be negative.");
-			}
+
+			this.warrantyPeriod = warrantyPeriod;
 		}
+
 
 
 		public override void DisplayInfo()

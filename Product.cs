@@ -17,55 +17,86 @@ namespace WarehouseManagementSystem
 			quantity = 0;
 		}
 
-		public Product(int id,string name, int quantity) 
+
+
+		public Product(int id, string name, int quantity)
 		{
-			this.id = id;
-			this.name = name;
+			SetId(id);
+			SetName(name);
 			SetQuantity(quantity);
 		}
 
+
+
+
 		public Product(Product p)
-		{ 
-			this.id=p.id;
-			this.name=p.name;
-			this.quantity=p.quantity;
+		{
+			if (p == null)
+			{
+				throw new ArgumentNullException(nameof(p));
+			}
+
+			SetId(p.GetId());
+			SetName(p.GetName());
+			SetQuantity(p.GetQuantity());
 		}
+
 
 		public int GetId()
 		{
 			return id;
 		}
 
-		public void SetId(int id) 
+
+		public void SetId(int id)
 		{
-			this.id = id;
+			if (id > 0)
+			{
+				this.id = id;
+			}
+			else
+			{
+				Console.WriteLine("Invalid Product ID. ID must be greater than zero.");
+			}
 		}
+
 
 		public string GetName() 
 		{
 		return name;
 		}
+
 		public void SetName(string name)
 		{
-			this.name = name;
+			if (!string.IsNullOrWhiteSpace(name))
+			{
+				this.name = name;
+			}
+			else
+			{
+				Console.WriteLine("Invalid Product Name. Name cannot be empty.");
+			}
 		}
+
 		public int GetQuantity()
 		{
 			return quantity;
 		}
 
+
 		public void SetQuantity(int quantity)
 		{
+			if (quantity < 0)
+			{
+				throw new ArgumentOutOfRangeException(
+					nameof(quantity),
+					"Quantity cannot be negative."
+				);
+			}
 
-			if (quantity >= 0)
-			{
-				this.quantity = quantity;
-			}
-			else
-			{
-				Console.WriteLine("Quantity cannot be a negative number");
-			}
+			this.quantity = quantity;
 		}
+
 
 		public virtual void DisplayInfo()
 		{

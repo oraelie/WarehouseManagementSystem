@@ -13,14 +13,38 @@ namespace WarehouseManagementSystem
 			products = new List<Product>();
 		}
 
+
 		public bool AddProduct(Product p)
 		{
+			// Check if the product is null
 			if (p == null)
 			{
 				Console.WriteLine("Invalid product.");
 				return false;
 			}
 
+			// Validate Product ID
+			if (p.GetId() <= 0)
+			{
+				Console.WriteLine("Cannot add product. Invalid Product ID.");
+				return false;
+			}
+
+			// Validate Product Name
+			if (string.IsNullOrWhiteSpace(p.GetName()))
+			{
+				Console.WriteLine("Cannot add product. Invalid Product Name.");
+				return false;
+			}
+
+			// Validate Product Quantity
+			if (p.GetQuantity() < 0)
+			{
+				Console.WriteLine("Cannot add product. Invalid Product Quantity.");
+				return false;
+			}
+
+			// Check for duplicate Product IDs
 			foreach (Product product in products)
 			{
 				if (product.GetId() == p.GetId())
@@ -30,6 +54,7 @@ namespace WarehouseManagementSystem
 				}
 			}
 
+			// Add the product to the warehouse
 			products.Add(p);
 
 			Console.WriteLine("Product added successfully.");
@@ -37,22 +62,24 @@ namespace WarehouseManagementSystem
 		}
 
 
+
+
 		public bool RemoveProduct(int id)
 		{
-			foreach (Product product in products)
-			{
-				if (product.GetId() == id)
-				{
-					products.Remove(product);
+			Product? product = FindProduct(id);
 
-					Console.WriteLine("Product removed successfully.");
-					return true;
-				}
+			if (product == null)
+			{
+				Console.WriteLine("Product not found.");
+				return false;
 			}
 
-			Console.WriteLine("Product not found.");
-			return false;
+			products.Remove(product);
+
+			Console.WriteLine("Product removed successfully.");
+			return true;
 		}
+
 
 
 		public Product? FindProduct(int id)
@@ -99,7 +126,6 @@ namespace WarehouseManagementSystem
 			return totalQuantity;
 		}
 
-
 		public int GetProductQuantity(int id)
 		{
 			Product? product = FindProduct(id);
@@ -115,7 +141,5 @@ namespace WarehouseManagementSystem
 				return -1;
 			}
 		}
-
-
 	}
 }
